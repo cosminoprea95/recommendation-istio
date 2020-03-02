@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: recommendation
+  namespace: jwt-security
   labels:
     app: recommendation
 spec:
@@ -26,6 +27,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: recommendation
+  namespace: jwt-security
   labels:
     app: recommendation    
 spec:
