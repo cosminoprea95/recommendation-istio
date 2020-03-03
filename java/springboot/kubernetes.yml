@@ -35,7 +35,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: recommendation
+      app: recommendation-v2
   template:
     metadata:
       labels:
