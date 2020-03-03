@@ -47,7 +47,7 @@ public class RecommendationController {
 
         logger.debug("recommendation service ready to return");
         if (misbehave) {
-            return doMisbehavior();
+            timeout();
         }
         return ResponseEntity.ok(String.format(RecommendationController.RESPONSE_STRING_FORMAT, HOSTNAME, count));
     }
