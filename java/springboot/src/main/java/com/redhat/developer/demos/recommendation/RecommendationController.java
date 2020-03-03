@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
+
 @RestController
 public class RecommendationController {
 
@@ -32,11 +35,14 @@ public class RecommendationController {
     }
 
     @RequestMapping("/")
-    public ResponseEntity<String> getRecommendations() {
+    public ResponseEntity<String> getRecommendations(HttpServletRequest httpServletRequest) {
         count++;
         logger.debug(String.format("recommendation request from %s: %d", HOSTNAME, count));
 
-        // timeout();
+        Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
+        while(headerNames.hasMoreElements()){
+            System.out.println(headerNames.nextElement());
+        }
 
         logger.debug("recommendation service ready to return");
         if (misbehave) {
