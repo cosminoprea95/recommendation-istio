@@ -41,7 +41,8 @@ public class RecommendationController {
 
         Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
         while(headerNames.hasMoreElements()){
-            System.out.println(headerNames.nextElement());
+            String headerKey = headerNames.nextElement();
+            System.out.println(headerKey +" -> "+httpServletRequest.getHeader(headerKey));
         }
 
         logger.debug("recommendation service ready to return");
