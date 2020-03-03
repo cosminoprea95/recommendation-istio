@@ -37,7 +37,7 @@ steps:
   - 'restart'
   - 'deployment/recommendation'
   - '-n'
-  - 'jwt-security'
+  - 'istio-tracing'
   env:
   - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
   - 'CLOUDSDK_CONTAINER_CLUSTER=istio-cluster'
