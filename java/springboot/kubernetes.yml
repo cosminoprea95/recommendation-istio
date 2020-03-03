@@ -1,10 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: recommendation
+  name: recommendation-v1
   namespace: istio-tracing
   labels:
-    app: recommendation
+    app: recommendation-v1
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recommendation-v1
+  template:
+    metadata:
+      labels:
+        app: recommendation-v1
+    spec:
+      containers:
+      - name: recommendation-v1
+        image: gcr.io/cirrus-initial-project/recommendation:latest
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommendation-v2
+  namespace: istio-tracing
+  labels:
+    app: recommendation-v2
+    version: v2
 spec:
   replicas: 1
   selector:
@@ -13,15 +39,14 @@ spec:
   template:
     metadata:
       labels:
-        app: recommendation
+        app: recommendation-v2
     spec:
       containers:
-      - name: recommendation
-        image: gcr.io/cirrus-initial-project/recommendation:v99
+      - name: recommendation-v2
+        image: gcr.io/cirrus-initial-project/recommendation:v2
         ports:
         - containerPort: 8080
         imagePullPolicy: Always
-
 ---
 apiVersion: v1
 kind: Service
