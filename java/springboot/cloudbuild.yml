@@ -1,43 +1,50 @@
 steps:
-# This step install mvn packages
-- name: 'gcr.io/cloud-builders/mvn'
-  id: Install
-  args: ['clean','install','-f','java/springboot']
+  # This step install mvn packages
+  - name: 'gcr.io/cloud-builders/mvn'
+    id: Install
+    args: ['clean','install','-f','java/springboot']
 
-# This step builds the container image.
-- name: 'gcr.io/cloud-builders/docker'
-  id: Build
-  args:
-  - 'build'
-  - '-t'
-  - 'gcr.io/cirrus-initial-project/recommendation:v2'
-  - 'java/springboot/'
+  # This step builds the container image.
+  - name: 'gcr.io/cloud-builders/docker'
+    id: Build
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/cirrus-initial-project/recommendation:v1'
+      - 'java/springboot/'
 
-# This step pushes the image to Container Registry
-# The PROJECT_ID and SHORT_SHA variables are automatically
-# replaced by Cloud Build.
-- name: 'gcr.io/cloud-builders/docker'
-  id: Push
-  args:
-  - 'push'
-  - 'gcr.io/cirrus-initial-project/recommendation:v2'
-- name: 'gcr.io/cloud-builders/kubectl'
-  id: Deploy
-  args:
-  - 'apply'
-  - '-f'
-  - 'java/springboot/kubernetes.yml'
-  env:
-  - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=istio-cluster'
-- name: 'gcr.io/cloud-builders/kubectl'
-  id: Fetch changes
-  args:
-  - 'rollout'
-  - 'restart'
-  - 'deployment/recommendation'
-  - '-n'
-  - 'istio-tracing'
-  env:
-  - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=istio-cluster'
+  # This step pushes the image to Container Registry
+  # The PROJECT_ID and SHORT_SHA variables are automatically
+  # replaced by Cloud Build.
+  - name: 'gcr.io/cloud-builders/docker'
+    id: Push
+    args:
+      - 'push'
+      - 'gcr.io/cirrus-initial-project/recommendation:v1'
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: Create deployment
+    args:
+      - 'apply'
+      - '-f'
+      - 'java/springboot/kubernetes.yml'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=istio-cluster'
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: Create Virtual Service
+    args:
+      - 'apply'
+      - '-f'
+      - 'java/springboot/virtualservice.yml'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=istio-cluster'
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: Fetch changes
+    args:
+      - 'rollout'
+      - 'restart'
+      - 'deployment/recommendation'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=istio-cluster'

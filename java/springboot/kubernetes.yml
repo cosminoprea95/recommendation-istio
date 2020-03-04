@@ -1,64 +1,68 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: recommendation-v1
-  namespace: istio-tracing
-  labels:
-    app: recommendation-v1
-    version: v1
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: recommendation-v1
-  template:
-    metadata:
-      labels:
-        app: recommendation-v1
-    spec:
-      containers:
-      - name: recommendation-v1
-        image: gcr.io/cirrus-initial-project/recommendation:latest
-        ports:
-        - containerPort: 8080
-        imagePullPolicy: Always
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: recommendation-v2
-  namespace: istio-tracing
+  namespace: ionel-ns-2
   labels:
-    app: recommendation-v2
+    app: recommendation
     version: v2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: recommendation-v2
+      app: recommendation
   template:
     metadata:
       labels:
-        app: recommendation-v2
+        app: recommendation
+        version: v2
     spec:
       containers:
-      - name: recommendation-v2
-        image: gcr.io/cirrus-initial-project/recommendation:v2
-        ports:
-        - containerPort: 8080
-        imagePullPolicy: Always
+        - name: recommendation
+          image: gcr.io/cirrus-initial-project/recommendation:v2
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommendation-v1
+  namespace: ionel-ns-2
+  labels:
+    app: recommendation
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recommendation
+  template:
+    metadata:
+      labels:
+        app: recommendation
+        version: v1
+    spec:
+      containers:
+        - name: recommendation
+          image: gcr.io/cirrus-initial-project/recommendation:v1
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Always
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: recommendation
-  namespace: istio-tracing
+  namespace: ionel-ns-2
   labels:
-    app: recommendation    
+    app: recommendation
 spec:
   ports:
-  - name: http
-    port: 8080
+    - name: http
+      port: 8080
   selector:
     app: recommendation
   type: LoadBalancer
