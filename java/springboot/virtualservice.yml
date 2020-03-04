@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: recommendation-virtualservice
-  namespace: ionel-ns-2
+  namespace: istio-demo
 spec:
   hosts:
     - recommendation
@@ -22,7 +22,7 @@ kind: DestinationRule       # Defining which pods should be part of each subset
 apiVersion: networking.istio.io/v1alpha3
 metadata:
   name: recommendation-canary-release # This can be anything you like.
-  namespace: ionel-ns-2
+  namespace: istio-demo
 spec:
   host: recommendation # Service
   subsets:
