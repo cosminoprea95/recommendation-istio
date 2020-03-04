@@ -44,7 +44,18 @@ steps:
     args:
       - 'rollout'
       - 'restart'
-      - 'deployment/recommendation'
+      - 'deployment/recommendation-v1'
+      - '-n'
+      - 'istio-demo'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=istio-cluster'
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: Fetch changes
+    args:
+      - 'rollout'
+      - 'restart'
+      - 'deployment/recommendation-v2'
       - '-n'
       - 'istio-demo'
     env:
