@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import java.util.Random;
 
 @RestController
 public class RecommendationController {
@@ -35,7 +36,7 @@ public class RecommendationController {
     }
 
     @RequestMapping("/")
-    public ResponseEntity<String> getRecommendations(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Recommendation> getRecommendations(HttpServletRequest httpServletRequest) {
         count++;
         logger.debug(String.format("recommendation request from %s: %d", HOSTNAME, count));
 
@@ -49,7 +50,16 @@ public class RecommendationController {
         if (misbehave) {
             timeout();
         }
-        return ResponseEntity.ok(String.format(RecommendationController.RESPONSE_STRING_FORMAT, HOSTNAME, count));
+
+        Recommendation recommendation = new Recommendation();
+        Random rand = new Random();
+        Integer id = rand.nextInt(1000000);
+        recommendation.setId(id);
+        recommendation.setComment(String.format(RecommendationController.RESPONSE_STRING_FORMAT, HOSTNAME, count));
+        boolean isOk = id % 2 == 0 ? Boolean.TRUE: Boolean.FALSE;
+        recommendation.setOk(isOk);
+
+        return ResponseEntity.ok(recommendation);
     }
 
     private void timeout() {
