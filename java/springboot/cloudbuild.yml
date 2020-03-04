@@ -10,7 +10,7 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'gcr.io/cirrus-initial-project/recommendation:v1'
+      - 'gcr.io/cirrus-initial-project/recommendation:v2'
       - 'java/springboot/'
 
   # This step pushes the image to Container Registry
@@ -20,7 +20,7 @@ steps:
     id: Push
     args:
       - 'push'
-      - 'gcr.io/cirrus-initial-project/recommendation:v1'
+      - 'gcr.io/cirrus-initial-project/recommendation:v2'
   - name: 'gcr.io/cloud-builders/kubectl'
     id: Create deployment
     args:
